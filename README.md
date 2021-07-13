@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Mini Project: Photo App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup environment 
 
-## Available Scripts
+Github Project: https://github.com/baodien1405/redux-photo-app
 
-In the project directory, you can run:
+### 1. Setup ReactJS App via Create React App
 
-### `npm start`
+> Link: https://create-react-app.dev/docs/getting-started/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 2. Add SCSS support
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```js
+npm i --save-dev node-sass
+```
 
-### `npm test`
+### 3. Add react router 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+npm i --save react-router-dom
+```
 
-### `npm run build`
+### 4. Add UI lib
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm i --save reactstrap
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tổ chức folder
 
-### `npm run eject`
+```
+src
+|__ assets
+|  |__ images
+|  |__ styles (global styles) 
+|
+|__ components (shared components)
+|
+|__ features
+  |__ Photo
+    |__ components
+    |  |__ PhotoList
+    |  |__ PhotoCard
+    |  |__ PhotoForm
+    |
+    |__ pages
+    |  |__ MainPage
+    |  |__ AddEditPage
+    |__ photoSlice.js
+    |__ index.js
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Tổ chức routing
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Sử dụng kĩ thuật lazy load components.
+- Load theo features.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```js
+// App.js
+function App() {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/photos" component={Photo} />
+        <Route path="/user" component={User} />
+        <Route component={NotFound} />
+      </Switch>
+    </BrowserRouter>
+  )
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Custom Field 
 
-## Learn More
+- Cầu nối giữa UI control và Formik.
+- UI control là một controlled component với props: 
+  - name: tên xác định control
+  - value: giá trị của control
+  - onChange: trigger hàm này với giá trị mới khi có thay đổi
+  - onBlur: xác định khi nào thì control này bị touched
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```js
+function InputField(props) {
+  const {
+    field,
+    type, label, placeholder, disabled,
+  } = props;
+  const { name } = field;
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  return (
+    <FormGroup>
+      {label && <Label for={name}>{label}</Label>}
 
-### Code Splitting
+      <Input
+        id={name}
+        {...field}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+        type={type}
+        disabled={disabled}
+        placeholder={placeholder}
+      />
+    </FormGroup>
+  );
+}
+```
 
-### Analyzing the Bundle Size
+## Random Photo control
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+RandomPhoto
+Props
+  - name
+  - imageUrl 
+  - onImageUrlChange 
+  - onRandomButtonBlur
 
-### Making a Progressive Web App
+RandomPhotoField
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Formik
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Yup
