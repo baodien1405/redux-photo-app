@@ -1,0 +1,42 @@
+import React, { Suspense, useEffect, useState } from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import NotFound from "./components/NotFound";
+import Header from "./components/Header";
+
+import "./App.scss";
+
+// Lazy load - Code splitting
+const Photo = React.lazy(() => import("./features/Photo"));
+
+function App() {
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    const fetchProductList = async () => {
+      try {
+      } catch (error) {
+        console.log("Failed to fetch product list", error);
+      }
+    };
+
+    fetchProductList();
+  }, []);
+
+  return (
+    <div className="photo-app">
+      <Suspense fallback={<div>Loading ...</div>}>
+        <BrowserRouter>
+          <Header />
+          <Switch>
+            <Redirect exact from="/" to="/photos" />
+
+            <Route path="/photos" component={Photo} />
+            <Route component={NotFound} />
+          </Switch>
+        </BrowserRouter>
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
